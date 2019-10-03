@@ -1,6 +1,5 @@
 ---
-title: 'Template - Lab 3: Exploring Happiness'
-subtitle: "Due: Thursday 10/03/2019 by 10 pm"
+title: 'Lab 3: Exploring Happiness'
 author: "Hannah Lo and Yuma Anderson"
 
 date: "09/26/2019"
@@ -10,36 +9,209 @@ output: html_document
 
 ## Background
 
-The General Social Survey (GSS) has been run by NORC every other year since 1972 to keep track of current opinions across the United States. We are working with an excerpt of the dataset that covers years 1972 to 2016. The variable names along with a brief description are as follows: 
+The data we are working with comes from the General Social Survey. It is the result of a yearly opinion survey from the United States. The portion we are working with today is from 1972-2016. The data includes the following:
 
 | Variable      | Description   |    
 | ------------- |:-------------:| 
+| Happy         | Opinion on respondent's general happiness | 
 | Year          | Year for this respondent | 
 | Age           | Age of respondent | 
-| Sex           | Sex of respondent     | 
-|....           | .....      | 
+| Sex           | Sex of respondent | 
+| Marital       | Marital Status | 
+| Degree        | Highest achieved degree | 
+| Finrela       | Opinion on respondent's family income | 
+| Health        | Condition of health | 
+| Wtssall       | Weight Variable for selection bias | 
+| Partyid       | Political party affiliation  | 
+| Polviews      | Think of self as liberal or conservative | 
 
-Now it's important to understand what each column stands for. You can find a codebook with explanations for each of the variables at https://gssdataexplorer.norc.org/
+These variable description's can be expounded on further by visiting https://gssdataexplorer.norc.org/. 
 
 ## Data Cleaning 
 
-Initial exploration revealed that some data processing was needed before we could proceed with further visualization. All missing values were encoded with 'NA' as follows:
-```{r}
-#insert relevant R code for Q1 here
+Before beginning our exploration, cleaning was neccesary. The data included missing values that were all replaced with a unifying 'NA'.
+
+```{r, include=FALSE}
+happy = readRDS("HAPPY.rds")
+names(happy) = tolower(names(happy))
+library(ggplot2)
+library(tidyverse)
 ```
 
-In total there were `....` number of missing values for the following `....` variables. 
-
-Variables were also cast into the correct type in order to ease data visualization. This was done by:
+#### Variable 'happy'
 ```{r}
-#insert relevant R code for Q2 here
+unique(happy$happy)
+empty = is.na(happy$happy)
+table(empty)
 ```
 
-Factors were also organized into meaningful order as follows: 
+#### Variable 'year'
 ```{r}
-#insert relevant R code for Q3 here
+unique(happy$year)
+empty = is.na(happy$year)
+table(empty)
 ```
 
+#### Variable 'age'
+```{r}
+unique(happy$age)
+empty = is.na(happy$age)
+table(empty)
+nrow(subset(happy,age =='DK'))
+happy$age[happy$age=='DK'] = NA
+nrow(subset(happy,age =='DK'))
+```
+
+#### Variable 'sex'
+```{r}
+unique(happy$sex)
+```
+
+#### Variable 'marital'
+```{r}
+unique(happy$marital)
+empty = is.na(happy$marital)
+table(empty)
+```
+
+#### Variable 'degree'
+```{r}
+unique(happy$degree)
+empty = is.na(happy$degree)
+table(empty)
+nrow(subset(happy,degree =='DK'))
+happy$degree[happy$degree=='DK'] = NA
+nrow(subset(happy,degree =='DK'))
+```
+
+#### Variable 'finrela'
+```{r}
+unique(happy$finrela)
+empty = is.na(happy$finrela)
+table(empty)
+table(happy$finrela)
+happy$finrela[(happy$finrela=='IAP'|happy$finrela=='DK')] = NA
+table(happy$finrela)
+```
+
+#### Variable 'health'
+```{r}
+unique(happy$health)
+empty = is.na(happy$health)
+table(empty)
+table(happy$health)
+happy$health[(happy$health=='IAP'|happy$health=='DK')] = NA
+table(happy$health)
+```
+
+#### Variable 'wtssall'
+```{r}
+empty = is.na(happy$wtssall)
+table(empty)
+nrow(subset(happy,(wtssall=='IAP'|wtssall=='DK')))
+```
+
+#### Variable 'partyid'
+```{r}
+unique(happy$partyid)
+empty = is.na(happy$partyid)
+table(empty)
+table(happy$partyid)
+happy$partyid[happy$partyid=='DK'] = NA
+table(happy$partyid)
+```
+
+#### Variable 'polviews'
+```{r}
+empty = is.na(happy$polviews)
+table(empty)
+nrow(subset(happy,(polviews=='IAP'|polviews=='DK')))
+happy$polviews[(happy$polviews=='IAP'|happy$polviews=='DK')] = NA
+nrow(subset(happy,(polviews=='IAP'|polviews=='DK')))
+```
+
+In total there were 36,391 number of missing values for the following variables: happy, age, marital, degree, finrela, health, partyid, and polviews.
+
+Additionally, variables were cast into correct types for visualization, and the factor variables were put into a reasonable order by the following:
+```{r}
+happy$happy = factor(happy$happy)
+happy$age[happy$age=='89 OR OLDER'] = '89'
+happy$age = as.numeric(happy$age)
+happy$sex = factor(happy$sex)
+happy$marital = factor(happy$marital, levels = c("NEVER","MARRIED","SEPARATED","DIVORCED","WIDOWED"))
+happy$degree = factor(happy$degree, levels = c("LT HIGHSCHOOL","HIGHSCHOOL","JUNIOR COLLEGE","BACHELOR","GRADUATE"))
+happy$finrela = factor(happy$finrela,levels = c("FAR BELOW AVERAGE","BELOW AVERAGE","AVERAGE","ABOVE AVERAGE","FAR ABOVE AVERAGE"))
+happy$health = factor(happy$health, levels = c("POOR","FAIR","GOOD","EXCELLENT"))
+happy$partyid = factor(happy$partyid, levels = c("STRONG DEMOCRAT","NOT STR DEMOCRAT","IND,NEAR DEM","INDEPENDENT","IND,NEAR REP","NOT STR REPUBLICAN","STRONG REPUBLICAN","OTHER PARTY"))
+happy$polviews = factor(happy$polviews, levels = c("EXTREMELY LIBERAL","LIBERAL","SLIGHTLY LIBERAL","MODERATE","SLIGHTLY CONSERVATIVE","CONSERVATIVE","EXTREMELY CONSERVATIVE"))
+```
+
+### Visualizations 
+```{r}
+ggplot(happy,aes(happy))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values", x="Relative happiness","Number of respondents")+theme(legend.position = "none")
+```
+
+The variable happy includes 4,756 'NA' values. The value 'PRETTY HAPPY' is the most abundant variable.
+
+```{r}
+ggplot(happy,aes(year))+geom_bar(fill = 'blue')+labs(title="Histogram of year values", x="Year","Number of respondents")+theme(legend.position = "none")
+```
+
+From 1972 to 1995, the survey was completed almost every year. However, it switched to every other year. 
+
+```{r}
+ggplot(happy,aes(age))+geom_histogram(binwidth = 3,fill='pink')+labs(title="Histogram of age values", x="Age","Number of respondents")
+```
+
+The distribution of respondent's age is right-skewed. The mean is greater than the mode.
+
+```{r}
+ggplot(happy,aes(sex))+geom_bar(aes(fill = sex))+labs(title="Barchart of sex values", x="Sex","Number of respondents")
+```
+
+The data is slightly biased towards the female respondents. 
+
+```{r}
+ggplot(happy,aes(marital))+geom_bar(aes(fill = marital))+labs(title="Barchart of marital values", x="Marital status","Number of respondents") + theme(legend.position = 'none')
+```
+
+Most respondents are married; however, there is a considerable amount of "NA" values in this variable.
+
+```{r}
+ggplot(happy,aes(degree))+geom_bar(aes(fill = degree))+labs(title="Barchart of Highest Degree Earned", x="Degree","Number of respondents")
+```
+
+This variable may not be the most useful in analysis due to the huge amount of 'NA' values. 
+
+```{r}
+ggplot(happy,aes(finrela))+geom_bar(aes(fill = finrela))+labs(title="Barchart of Family Income", x="Family Income","Number of respondents")+ theme(legend.position='none',axis.text.x=element_text(size=6))
+```
+
+The variable 'finrela' follows a normal distribution.
+
+```{r}
+ggplot(happy,aes(health))+geom_bar(aes(fill = health))+labs(title="Barchart of health", x="Health Rating","Number of respondents")+ theme(legend.position='none')
+```
+
+Health is another variable that has a considerable amount of 'NA' values. This may cause some difficulties in analysis. 
+
+```{r}
+ggplot(happy,aes(wtssall))+geom_histogram(binwidth = .05, fill = 'purple')+labs(title="Histogram of Weights", x="Weight","Number of respondents")+xlim(0,5)
+```
+
+The weight variable is in three clusters. The first two clusters are much larger than the third.
+
+```{r}
+ggplot(happy,aes(partyid))+geom_bar(aes(fill = partyid))+labs(title="Barchart of Political Party Affliation", x="Political Party","Number of respondents")+ theme(axis.text.x=element_blank())+scale_fill_discrete(name = "Political Party")
+```
+
+The political party of the respondents are slightly focused towards the Democrat side.
+
+```{r}
+ggplot(happy,aes(polviews))+geom_bar(aes(fill = polviews))+labs(title="Barchart of Political identification", x="Political Spectrum","Number of respondents")+ theme(axis.text.x=element_blank())+scale_fill_discrete(name = "Political Identification")
+```
+
+The 'polviews' variable has many 'NA' values also. Most people identify as moderate which could contrast with the 'polyid' variable. 
 
 ## Data Exploration 
 
