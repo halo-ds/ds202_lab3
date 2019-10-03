@@ -215,10 +215,111 @@ The 'polviews' variable has many 'NA' values also. Most people identify as moder
 
 ## Data Exploration 
 
-Two variables of interest are `...` and `...`. Their distributions are as follow: 
+
+Two variables of interest are `HAPPY` and `YEAR`. Their distributions are as follow: 
 ```{r}
-#insert relevant R code here
-#include graphics. DESCRIBE your plot in context. Make sure it includes axis labels and appropriate title. 
+ggplot(happy,aes(year))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by year", x="Relative happiness","Number of respondents")+theme()
 ```
 
-The distribution for `...` is `....`, suggesting that `....` 
+The happiness ratings for every year appear to be evenly distributed every year except the 2002-2006 values, which have high NA values and drastic changes in respondents. 
+
+The distribution for `Happy by year` is  relatively normal, suggesting that the the average amount of happiness is not dependent on the year variable alone.
+
+
+Two variables of interest are `HAPPY` and `AGE`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(age))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by age", x="Relative happiness","Number of respondents")+theme()
+```
+
+The distribution for `happy by age` is `right-skewed`, suggesting that `people who are younger are happier.` This could be due to the fact that there are more younger respondents in the data. There is also a larger number of people aged 20-40 who respond `not too happy` than people aged 80+.
+
+
+Two variables of interest are `HAPPY` and `SEX`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(sex))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by sex", x="Relative happiness","Number of respondents")+theme()
+```
+```{r}
+ggplot(happy,aes(x =sex,fill=happy))+geom_bar(position="fill")+labs(title="happy values by sex", x="sex")
+```
+
+The distribution for `happy by sex` is `normal`, suggesting that happiness is evenly distributed among the sexes, even though there are a larger number of female respondents. 
+
+
+Two variables of interest are `HAPPY` and `FINRELA`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(finrela))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by income", x="Relative happiness","Number of respondents")+theme()
+```
+```{r}
+ggplot(happy,aes(x =finrela,fill=happy))+geom_bar(position="fill")+labs(title="happy values by income", x="incomes")
+```
+
+The distribution for `happy by income` is `normal`, and shows that there is correlation between income and happiness. Higher incomes have higher numbers of 'very happy' and 'pretty happy' ratings, while the 'far below average' income has the higest 'not too happy' rating.
+
+Two variables of interest are `HAPPY` and `WTSSALL`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(wtssall))+geom_histogram(binwidth = .02, aes(fill = happy))+ xlim(0.25, 3.25)+labs(title="Histogram of happy values by weight", x="Relative happiness","Number of respondents")+theme()
+
+```
+
+The distribution for `happy by weight` is `right skewed` with 2 large clusters. There are higher numbers of respondents with 'not too happy' in the largest lower weight clusters, but that is most likely due to the higher number of respondents and not the actual relative happiness based on weight.
+
+Two variables of interest are `HAPPY` and `PARTYID`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(partyid))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by political party", x="Relative happiness","Number of respondents")+theme()
+```
+```{r}
+ggplot(happy,aes(x =partyid,fill=happy))+geom_bar(position="fill")+labs(title="happy values by political party", x="political party")
+```
+
+The distribution for `happy by political party` is `right skewed`, with a larger number of Democrat and moderate respondents. There are a larger number of respondents that are 'very happy' and 'strong republicans'. 
+
+
+Two variables of interest are `HAPPY` and `POLVIEWS`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(polviews))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by political views", x="Relative happiness","Number of respondents")+theme()
+```
+```{r}
+ggplot(happy,aes(x =polviews,fill=happy))+geom_bar(position="fill")+labs(title="happy values by political views", x="political views")
+```
+
+The distribution for `happy by political views` is `relatively normal`, with a higher number of moderate respondents. There are a higher number of 'extremely liberal' respondents who are 'not too happy' and 'conservative' respondents who are 'very happy.' This data has a high number of NA values, so it may not be an accurate reflection of the population.
+
+
+ 
+Two variables of interest are `HAPPY` and `HEALTH`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(health))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by health", x="Relative happiness","Number of respondents")+theme()
+```
+
+
+```{r}
+ggplot(happy,aes(x =health,fill=happy))+geom_bar(position="fill")+labs(title="happy values by health", x="health")
+```
+
+The distribution for `happy by health` is `left-skewed`, with a higher number of respondents in 'good' or 'excellent' health. There are a higher number of 'excellent' health respondents who are 'very happy' and 'poor' health respondents who are 'not too happy.' This data has a high number of NA values, so it may not be an accurate reflection of the population.
+
+Two variables of interest are `HAPPY` and `MARITAL`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(marital))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by marital status", x="Relative happiness","Number of respondents")+theme()
+```
+
+```{r}
+ggplot(happy,aes(x =marital,fill=happy))+geom_bar(position="fill")+labs(title="happy values by marital status", x="marital status")
+```
+
+The distribution for `happy by marital status` has a high number of married respondents. There are a higher number of 'separated' respondents who are 'not too happy' and 'married' respondents who are 'very happy.' This data has a high number of NA values, so it may not be an accurate reflection of the population.
+
+
+Two variables of interest are `HAPPY` and `DEGREE`. Their distributions are as follow: 
+```{r}
+ggplot(happy,aes(degree))+geom_bar(aes(fill = happy))+labs(title="Histogram of happy values by highest degree earned", x="Relative happiness","Number of respondents")+theme()
+
+```
+
+```{r}
+ggplot(happy,aes(x =degree,fill=happy))+geom_bar(position="fill")+labs(title="happy values by highest degree earned", x="highest degree earned")
+```
+
+The distribution for `happy by highest degree earned` is `relatively normal`, with the exception that there are an abnormally high number of NA values. Other than the NA values, there seems to be an even distribution of happiness by the highest degree earned, although there are a slightly larger number of respondents with graduate degrees who are 'very happy'. This data has a high number of NA values, so it may not be an accurate reflection of the population.
+
+
